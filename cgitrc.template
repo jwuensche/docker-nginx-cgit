@@ -1,10 +1,84 @@
-#
-# cgit config
-# see cgitrc(5) for details
+# Make cgit generate link using absolute URL
+virtual-root=/
 
-root-title=$CGIT_TITLE
-root-desc=$CGIT_DESC
+# Enable caching of up to 1000 output entriess
+cache-size=1000
 
+# cache time to live 
+cache-dynamic-ttl=5
+cache-repo-ttl=5
+
+# Specify some default clone urls using macro expansion
+clone-url=https://git.spacesnek.rocks/$CGIT_REPO_URL git@git.spacesnek.rocks:$CGIT_REPO_URL
+
+# Specify the css url
+css=/cgit-css/cgit.css
+
+# Show owner on index page
+enable-index-owner=1
+
+# Source gitweb.description, gitweb.owner from each project config
+enable-git-config=1
+
+# Allow http transport git clone
+enable-git-clone=0
+
+# Show extra links for each repository on the index page
+enable-index-links=1
+
+# Remove .git suffix from project display
+remove-suffix=1
+
+# Enable ASCII art commit history graph on the log pages
+enable-commit-graph=1
+
+# Show number of affected files per commit on the log pages
+enable-log-filecount=1
+
+# Show number of added/removed lines per commit on the log pages
+enable-log-linecount=1
+
+# Sort branches by date
+branch-sort=age
+
+# Add a cgit favicon
+favicon=/favicon.ico
+
+# Use a custom logo
+logo=/cgit-css/cgit.png
+
+# Enable statistics per week, month and quarter
+max-stats=quarter
+
+# Set the title and heading of the repository index page
+root-title=git.spacesnek.rocks
+
+# Set a subheading for the repository index page
+root-desc=avoid long routes - host locally 🌌🐍
+
+# Include some more info about example.com on the index page
+root-readme=/var/www/git/about.htm
+
+# Allow download of tar.gz, tar.bz2 and zip-files
+snapshots=tar.bz2 zip
+
+##
+## List of common mimetypes
+##
+
+mimetype.gif=image/gif
+mimetype.html=text/html
+mimetype.jpg=image/jpeg
+mimetype.jpeg=image/jpeg
+mimetype.pdf=application/pdf
+mimetype.png=image/png
+mimetype.svg=image/svg+xml
+
+# Highlight source code with python pygments-based highligher
+# source-filter=/usr/local/lib/cgit/filters/syntax-highlighting.py
+
+# Format markdown, restructuredtext, manpages, text files, and html files
+# through the right converters
 source-filter=/usr/lib/cgit/filters/syntax-highlighting.sh
 about-filter=/usr/lib/cgit/filters/about-formatting.sh
 
@@ -41,28 +115,14 @@ readme=:install.txt
 readme=:INSTALL
 readme=:install
 
-# Default Theme
-css=/cgit-css/cgit.css
-logo=/cgit-css/cgit.png
+##
+## List of repositories.
+## PS: Any repositories listed when section is unset will not be
+##     displayed under a section heading
+## PPS: This list could be kept in a different file (e.g. '/etc/cgitrepos')
+##      and included like this:
+##        include=/etc/cgitrepos
+##
 
-# Cache
-cache-root=/var/cache/cgit
-cache-size=1000
-
-enable-index-links=1
-enable-index-owner=0
-enable-remote-branches=1
-enable-log-filecount=1
-enable-log-linecount=1
-enable-git-config=1
-snapshots=tar.gz tar.bz2 zip
-
-robots=noindex, nofollow
-
-virtual-root=$CGIT_VROOT
-
-section-from-path=$CGIT_SECTION_FROM_STARTPATH
-
-max-repo-count=$CGIT_MAX_REPO_COUNT
-
-scan-path=/srv/git/
+# project-list=/home/git/projects.list
+scan-path=/srv/git
