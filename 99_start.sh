@@ -9,6 +9,8 @@ fi
 
 envsubst "$CGIT_VARS" < /etc/cgitrc.template > /etc/cgitrc
 
-/usr/bin/spawn-fcgi -F $FCGI_CHILDREN -M 666 -s /var/run/fcgiwrap.socket /usr/sbin/fcgiwrap
+/usr/bin/spawn-fcgi -F $FCGI_CHILDREN -M 666 -s /var/run/fcgiwrap.socket /usr/bin/fcgiwrap
+/usr/sbin/sshd
 
+mkdir /run/nginx
 /usr/sbin/nginx -g "daemon off;"
