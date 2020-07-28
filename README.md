@@ -1,72 +1,48 @@
-# docker-nginx-cgit
+# 📦 cgit-in-a-box
 
-A Docker image for Cgit running over Nginx.
+This configuration and docker image is build to be a quick and instantaneous way to setup a cgit.
+It should not take more effort to deploy than to open a box.
 
-[![](https://images.microbadger.com/badges/image/emarcs/nginx-cgit.svg)](http://microbadger.com/images/emarcs/nginx-cgit "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/emarcs/nginx-cgit.svg)](http://microbadger.com/images/emarcs/nginx-cgit "Get your own version badge on microbadger.com")
-
-This is a docker image for Cgit, a lightweight web interface for git.
-
-## Installation
-
-Download this image from the docker hub:
-
-```shell
-docker pull emarcs/nginx-cgit
-```
-
-Then wait for docker to do its magic.
+This image provides a preconfigured cgit web interface, which can be easily attached to a reverse proxy.
 
 ## Usage
 
-To launch the container, just the run command like this:
+To build the container simply type:
 
-```sh
-docker run -d \
-           -p 2340:80 \
-           --name nginx-git-srv \
-           -v /git:/srv/git \
-           emarcs/nginx-cgit
+```
+$ make
 ```
 
-In the above example the **/git** folder of the the host
-is used inside the **/srv/git** folder of the container,
-the HTTP port is mapped on the host on port **2340**.
+And to run:
 
-### Using a custom Nginx configuration
+```
+$ docker run -p 8080:80 -p 9418:9418 -v ./cgitrc:/etc/cgitrc -v /srv/git:/srv/git cgit-in-a-box
+```
+
+If ssh access to the container is required you can also add your public id to authorized keys
+```
+$ docker run -p 8080:80 -p 9418:9418 -p 2222:22 -v ./cgitrc:/etc/cgitrc -v /srv/git:/srv/git -v ./id_rsa.pub:/root/.ssh/authorized_keys cgit-in-a-box
+```
+
+### Using docker-compose
 
 An example using docker-compose of how to mount a custom
 configuration for Nginx:
 
 ```yml
-test_srv:
-  image: emarcs/nginx-cgit
-  ports:
-    - 8181:80
-  volumes:
-    - /srv/git:/srv/git
-    # custom nginx configuration
-    - ./default.conf:/etc/nginx/sites-available/default
-  environment:
-    CGIT_TITLE: 'My awesome git repos'
-    CGIT_DESC: 'Presented by Cgit on Docker'
-    CGIT_VROOT: '/'
-    # check section-from-path in cgit docs
-    CGIT_SECTION_FROM_STARTPATH: 0
-    CGIT_MAX_REPO_COUNT: 50
+version: "3"
+
+services:
+  cgit:
+    image: cgit-in-a-box
+    ports:
+      - "2222:22"
+      - "9418:9418"
+      - "8080:80"
+    volumes:
+      - /srv/git:/srv/git
+      - ./cgitrc:/etc/cgitrc
+      - ./id_rsa.pub:/root/.ssh/authorized_keys
 ```
 
-### Cache
-
-cgit provides a cache mechanism (cf https://git.zx2c4.com/cgit/tree/cgitrc.5.txt ), which will
-by default store entries in `/var/cache/cgit`.
-
-You can eventually map this folder to your disk:
-```sh
-docker run -d \
-           -p 2340:80 \
-           --name nginx-git-srv \
-           -v /git:/srv/git \
-           -v /mnt/disk/cgit/cache:/var/cache/cgit \
-           emarcs/nginx-cgit
-```
-
+Thanks to the original authors from which this repository is a derivative from [check them out here](https://github.com/marcopompili/docker-nginx-cgit).
